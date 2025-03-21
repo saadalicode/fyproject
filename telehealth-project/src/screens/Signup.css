@@ -1,0 +1,126 @@
+
+.parent-container {
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.007); /* Semi-transparent white */
+    backdrop-filter: blur(5px); /* Blurs background */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.child-container {
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.5);
+    height: 75%;
+    width: 75%;
+    display: flex;
+    flex-direction: row;
+}
+
+.child {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+  /* Login container */
+.ssignup-container {
+    /* position: relative; */
+}
+
+.llogin-container {
+    background-color: rgba(255, 0, 0, 0.838);
+}
+  
+  /* lLogin Title */
+.ssignup-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: rgba(255, 0, 0, 0.838);
+  margin-bottom: 20px;
+}
+  
+  
+  /* Sign-up Text */
+.llogin-text {
+  margin-top: 15px;
+  font-size: 14px;
+  color: white; 
+}
+  
+  /* Sign-up Link */
+.llogin-link {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 5px;
+}
+  
+.llogin-link:hover {
+  text-decoration: underline;
+}
+  
+.custom-button {
+  border-radius: 7px;
+  color: white;
+  background-color: rgba(255, 0, 0, 0.838);
+  border: 2px solid white;
+  width: 20%;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.custom-button:hover {
+  color: black;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkBox{
+  justify-content: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.outer-checkBox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid red;
+  border-radius: 5px;
+  position: absolute;
+  top: 4px;
+  left: -20px;
+}
+
+.inner-checkBox {
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border: 2px solid white;
+  border-radius: 5px;
+}
+
+.checkedBox {
+  border: 3px solid red;
+}
+
+.termsAndConditions  {
+  color: rgb(33, 37, 41);
+  font-style: italic;
+  text-decoration: none;
+}
+.termsAndConditions:hover  {
+  text-decoration: underline;
+}
+
+@media (max-width: 992px) {
+  .custom-button {
+    width: 40%;
+  }
+}

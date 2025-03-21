@@ -1,0 +1,79 @@
+
+[
+    {
+      "id": 1,
+      "name": "Dr. John Smith",
+      "email": "john.smith@example.com",
+      "phone": "123456789012",
+      "specialization": "Cardiologist",
+      "experience": 15,
+      "slots": 10,
+      "working_days": ["Monday", "Tuesday", "Wednesday", "Friday"],
+      "opening_hours": "09:00:00",
+      "closing_hours": "17:00:00",
+      "price": 120.50,
+      "address": "123 Main St, New York, NY",
+      "image": "john_smith.png"
+    },
+    {
+      "id": 2,
+      "name": "Dr. Emily Johnson",
+      "email": "emily.johnson@example.com",
+      "phone": "987654321098",
+      "specialization": "Dermatologist",
+      "experience": 10,
+      "slots": 8,
+      "working_days": ["Monday", "Wednesday", "Thursday", "Saturday"],
+      "opening_hours": "10:00:00",
+      "closing_hours": "18:00:00",
+      "price": 95.00,
+      "address": "456 Elm St, Los Angeles, CA",
+      "image": "emily_johnson.png"
+    },
+    {
+      "id": 3,
+      "name": "Dr. Mark Wilson",
+      "email": "mark.wilson@example.com",
+      "phone": "456789123456",
+      "specialization": "Neurologist",
+      "experience": 12,
+      "slots": 6,
+      "working_days": ["Tuesday", "Thursday", "Friday"],
+      "opening_hours": "08:30:00",
+      "closing_hours": "16:30:00",
+      "price": 150.75,
+      "address": "789 Oak St, Chicago, IL",
+      "image": "mark_wilson.png"
+    },
+    {
+      "id": 4,
+      "name": "Dr. Sarah Adams",
+      "email": "sarah.adams@example.com",
+      "phone": "321654987321",
+      "specialization": "Pediatrician",
+      "experience": 8,
+      "slots": 12,
+      "working_days": ["Monday", "Tuesday", "Thursday", "Friday", "Saturday"],
+      "opening_hours": "09:30:00",
+      "closing_hours": "15:30:00",
+      "price": 85.25,
+      "address": "101 Pine St, Houston, TX",
+      "image": "sarah_adams.png"
+    },
+    {
+      "id": 5,
+      "name": "Dr. William Brown",
+      "email": "william.brown@example.com",
+      "phone": "789321654987",
+      "specialization": "Orthopedic Surgeon",
+      "experience": 20,
+      "slots": 5,
+      "working_days": ["Monday", "Wednesday", "Friday"],
+      "opening_hours": "07:00:00",
+      "closing_hours": "14:00:00",
+      "price": 200.00,
+      "address": "202 Cedar St, Miami, FL",
+      "image": "william_brown.png"
+    }
+  ]
+  

@@ -1,0 +1,67 @@
+.terms-parent-container {
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 30%); /* Semi-transparent white */
+    backdrop-filter: blur(5px); /* Blurs background */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.terms-child-container {
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.5);
+    height: 75%;
+    width: 60%;
+    padding: 20px;
+    overflow: hidden; /* Prevents content overflow */
+    display: flex;
+    flex-direction: column;
+}
+
+.terms-header {
+    position: sticky; 
+    top: 0; 
+    background-color: white; 
+    z-index: 1; 
+}
+
+.terms-content {
+    flex-grow: 1; 
+    overflow-y: auto; 
+    padding-right: 10px; 
+    margin-top: 10px; 
+}
+
+.cancle-box {
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    height: 25px;
+    width: 25px;
+    border: 2px solid white;
+    box-shadow: 0px 2px 6px rgba(255, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 1s ease-in-out;
+}
+
+.cancle-box:hover {
+    rotate: 360deg;
+}
+
+.left-arrow, .right-arrow {
+    position: absolute;
+    height: 24px;
+    width: 2px;
+    background-color: red;
+}
+
+.left-arrow {
+    transform: rotate(-45deg);
+}
+
+.right-arrow {
+    transform: rotate(45deg);
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "appointment_id": 101,
+    "patient_id": 1,
+    "patient_name": "Alice Johnson",
+    "scheduler_name": "Alice Johnson",
+    "appointment_date": "2025-03-12",
+    "appointment_status": "pending",
+    "doctor_name": "",
+    "disease": "",
+    "doctor_remarks": "",
+    "rating": 4
+  },
+  {
+    "appointment_id": 100,
+    "patient_id": 1,
+    "patient_name": "Alice Johnson",
+    "scheduler_name": "Sam ",
+    "appointment_date": "2025-01-10",
+    "appointment_status": "entertained",
+    "doctor_name": "Dr. Emily Carter",
+    "disease": "Hypertension",
+    "doctor_remarks": "Prescribed medication",
+    "rating": 4
+  },
+  {
+    "appointment_id": 102,
+    "patient_id": 2,
+    "patient_name": "Bob Smith",
+    "scheduler_name": "John Smith",
+    "appointment_date": "2025-03-10",
+    "appointment_status": "entertained",
+    "doctor_name": "Dr. Emily Carter",
+    "disease": "Hypertension",
+    "doctor_remarks": "Prescribed medication",
+    "rating": 5
+  },
+  {
+    "appointment_id": 103,
+    "patient_id": 3,
+    "patient_name": "Charlie Brown",
+    "scheduler_name": "Charlie Brown",
+    "appointment_date": "2025-03-11",
+    "appointment_status": "pending",
+    "doctor_name": "",
+    "disease": "",
+    "doctor_remarks": "",
+    "rating": 3
+  },
+  {
+    "appointment_id": 104,
+    "patient_id": 4,
+    "patient_name": "Daisy Miller",
+    "scheduler_name": "Michael Miller",
+    "appointment_date": "2025-03-09",
+    "appointment_status": "entertained",
+    "doctor_name": "Dr. Robert Adams",
+    "disease": "General Check-up",
+    "doctor_remarks": "Routine check-up",
+    "rating": 4
+  },
+  {
+    "appointment_id": 105,
+    "patient_id": 5,
+    "patient_name": "Ethan Wilson",
+    "scheduler_name": "Ethan Wilson",
+    "appointment_date": "2025-03-08",
+    "appointment_status": "entertained",
+    "doctor_name": "Dr. Sarah Johnson",
+    "disease": "Physiotherapy",
+    "doctor_remarks": "Physical therapy recommended",
+    "rating": 5
+  },
+  {
+    "appointment_id": 106,
+    "patient_id": 6,
+    "patient_name": "Fiona Green",
+    "scheduler_name": "Liam Green",
+    "appointment_date": "2025-03-07",
+    "appointment_status": "pending",
+    "doctor_name": "",
+    "disease": "",
+    "doctor_remarks": "",
+    "rating": 2
+  },
+  {
+    "appointment_id": 107,
+    "patient_id": 7,
+    "patient_name": "George Adams",
+    "scheduler_name": "George Adams",
+    "appointment_date": "2025-03-11",
+    "appointment_status": "pending",
+    "doctor_name": "",
+    "disease": "",
+    "doctor_remarks": "",
+    "rating": 3
+  },
+    {
+      "appointment_id": 110,
+      "patient_id": 7,
+      "patient_name": "Fiona Green",
+      "scheduler_name": "George Adams",
+      "appointment_date": "2025-02-22",
+      "appointment_status": "entertained",
+      "doctor_name": "Dr. Sarah Johnson",
+      "disease": "Physiotherapy",
+      "doctor_remarks": "Referred to a specialist",
+      "rating": 4
+    },
+    {
+      "appointment_id": 111,
+      "patient_id": 2,
+      "patient_name": "Fiona Green",
+      "scheduler_name": "John Smith",
+      "appointment_date": "2025-02-08",
+      "appointment_status": "entertained",
+      "doctor_name": "Dr. Robert Adams",
+      "disease": "General Check-up",
+      "doctor_remarks": "Repellat libero neque nulla illum natus vel, nobis aliquid aut quae praesentium consectetur esse sapiente voluptatibus aperiam temporibus. Molestias, incidunt ducimus vitae laboriosam eos, voluptatibus recusandae assumenda necessitatibus earum labore odit minus!",
+      "rating": 4
+    }
+]

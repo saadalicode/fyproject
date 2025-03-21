@@ -1,0 +1,7 @@
+.input-field {
+    border: 2px solid rgba(255, 0, 0, 0.838);
+    border-radius: 7px;
+    margin-bottom: 7px;
+    padding: 4px;
+    width: 60%;
+}

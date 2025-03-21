@@ -1,0 +1,13 @@
+.patient-details-button { 
+    background-color: orange;
+    color: white; 
+    margin-right: 5px ;
+    border: none;
+    border-radius: 10px; 
+}
+
+@media (max-width: 992px) {
+    .patient-details-button{
+        margin-bottom: 2px;
+    }
+}
