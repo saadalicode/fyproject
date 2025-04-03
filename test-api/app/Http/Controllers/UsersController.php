@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
+    public function login(Request $request)
+    {
+
+    }
     public function index()
     {
         return response()->json(User::all());

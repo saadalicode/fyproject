@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('appointments', function (Blueprint $table) {
+            $table->id('appointment_id');
+            $table->unsignedBigInteger('patient_id');
+            $table->string('patient_name');
+            $table->string('scheduler_name');
+            $table->date('appointment_date');
+            $table->enum('appointment_status', ['pending', 'reschedule', 'entertained'])->default('pending');
+            $table->string('doctor_name')->nullable();
+            $table->string('disease')->nullable();
+            $table->text('doctor_remarks')->nullable();
+            $table->tinyInteger('rating')->default(0)->comment('Rating from 0 to 5');
+            $table->timestamps();
+
+            // Foreign Key Constraint (if patients table exists)
+            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('appointments');
+    }
+};
