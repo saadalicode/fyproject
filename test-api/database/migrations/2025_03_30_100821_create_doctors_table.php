@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('specialization');
             $table->integer('experience')->nullable();
-            $table->json('working_days'); // Stores selected working days (e.g., ["Monday", "Tuesday"])
-            $table->json('slots'); // Stores slots per day (e.g., {"Monday": 10, "Tuesday": 10})
+            $table->json('working_days'); // Simple string type not json
+            $table->json('slots'); // simple string not json
             $table->time('opening_hours');
             $table->time('closing_hours');
             $table->decimal('price', 8, 2);

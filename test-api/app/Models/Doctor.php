@@ -29,9 +29,15 @@ class Doctor extends Model
         'password',
     ];
 
-    protected $casts = [
-        'working_days' => 'array', // Store working days as JSON
-        'slots' => 'json', // Store slots as JSON
-    ];
+    // protected $casts = [
+    //     'working_days' => 'array', // Store working days as array
+    //     'slots' => 'array', // Store slots as array
+    // ];
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'doctor_id');
+    }
+
 }
 

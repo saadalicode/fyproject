@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
@@ -11,12 +12,12 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'doctor_id' => 'required|exists:doctors,id',  
             'patient_id' => 'required|exists:patients,id',
             'patient_name' => 'required|string|max:255',
             'scheduler_name' => 'required|string|max:255',
             'appointment_date' => 'required|date',
             'appointment_status' => 'required|in:pending,reschedule,entertained',
-            'doctor_name' => 'nullable|string|max:255',
             'disease' => 'nullable|string|max:255',
             'doctor_remarks' => 'nullable|string',
             'rating' => 'nullable|integer|min:0|max:5',
@@ -33,7 +34,17 @@ class AppointmentController extends Controller
     // Fetch all appointments
     public function index()
     {
-        return response()->json(Appointment::all(), 200);
+        $appointments = Appointment::with('patient')->get();
+
+        return response()->json($appointments);
+    }
+
+    // Display the specific appointment
+    public function show($id)
+    {
+        $appointment = Appointment::with(['doctor', 'patient'])->findOrFail($id);
+
+        return response()->json( $appointment);
     }
 
     // Update appointment status
@@ -51,5 +62,25 @@ class AppointmentController extends Controller
             'appointment' => $appointment
         ], 200);
     }
+
+    public function showAppointment()
+{
+    // Get all appointments with 'pending' status along with the patient details
+    $appointments = Appointment::with('patient')  // Eager load patient relation
+                               ->where('appointment_status', 'pending')  // Filter appointments with 'pending' status
+                               ->get();
+     // Map the appointments to include patient name directly if needed
+     $appointments = $appointments->map(function ($appointment) {
+        $appointment->schedular_name = $appointment->patient->name;  // Accessing patient name from the relation
+        return $appointment;
+    });
+
+    if ($appointments->isEmpty()) {
+        return response()->json(["message" => "No pending appointments found"], 400);
+    }
+
+    return response()->json($appointments);
+}
+
 }
 

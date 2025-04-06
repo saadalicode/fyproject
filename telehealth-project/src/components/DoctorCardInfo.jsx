@@ -8,7 +8,7 @@ const DoctorCardInfo = ({ doctor }) => {
       {/* Doctor's Image */}
       <Link to={`/doctors/${doctor.id}`} className="cursor-pointer">
         <img
-          src={`/assets/images/doctors/${doctor.image}`} 
+          src={doctor.image}
           alt={doctor.name}
           className="images-container"
         />
@@ -21,7 +21,7 @@ const DoctorCardInfo = ({ doctor }) => {
         </Link>
         <p className="text-lg text-gray-600">{doctor.specialization}</p>
         <p className="text-gray-500">Experience: {doctor.experience} years</p>
-        <p className="text-green-600 font-bold">Price: ${doctor.price}</p>
+        <p className="text-green-600 font-bold">Fee: {doctor.price}</p>
       </div>
     </div>
   );

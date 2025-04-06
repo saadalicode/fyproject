@@ -1,19 +1,88 @@
 import React, { useState } from "react";
+import axios from "axios";
 import InputField from "../components/InputField";
 import ButtonComponent from "../components/ButtonComponent";
 import "./AddDoctor.css";
 
 const Signup = () => {
-  const [Name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [address, setAddress] = useState("");
-  const [image, setImage] = useState(null);
+  const [addDoctorfield, setAddDoctorField] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    password: "",
+    specialization: "",
+    experience: "",
+    working_days: "",
+    slots: "",
+    opening_hours: "",
+    closing_hours: "",
+    price: "",
+    address: "", 
+    image: "",
+  });
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);  
+    const file = e.target.files[0];
+    if (file){
+      setAddDoctorField((prevFields) => ({
+        ...prevFields,
+        image: file
+      }));
+    }
   };
+  
+
+  const handleAddDoctorFieldChange = (e) => {
+    const { name, value } = e.target;
+    setAddDoctorField((prevFields) => ({
+      ...prevFields,
+      [name]: value
+    }));
+  };
+
+  const formatTimeToHHMMSS = (time) => {
+    return time ? time + ":00" : "";
+  };
+  
+  const handleAddDoctorSubmit = async (e) => {
+    e.preventDefault();
+
+    // Prepare data
+    const formData = new FormData();
+    formData.append("name", addDoctorfield.name);
+    formData.append("phone", addDoctorfield.phone);
+    formData.append("email", addDoctorfield.email);
+    formData.append("password", addDoctorfield.password);
+    formData.append("specialization", addDoctorfield.specialization);
+    formData.append("experience", addDoctorfield.experience);
+
+    // Convert arrays to space-separated strings
+    formData.append("working_days", addDoctorfield.working_days.split(',').join(' '));
+    formData.append("slots", addDoctorfield.slots.split(',').join(' ')); // Ensure slots are space-separated
+
+    formData.append("opening_hours", formatTimeToHHMMSS(addDoctorfield.opening_hours));
+    formData.append("closing_hours", formatTimeToHHMMSS(addDoctorfield.closing_hours));
+    formData.append("price", addDoctorfield.price);
+    formData.append("address", addDoctorfield.address);
+    formData.append("image", addDoctorfield.image);
+
+    try {
+        const response = await axios.post(
+            "http://127.0.0.1:8000/api/addDoctor",
+            formData,
+            { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        console.log("New Doctor Created successfully:", response.data);
+        setAddDoctorField({
+            name: "", phone: "", email: "", password: "", specialization: "",
+            experience: "", working_days: "", slots: "", opening_hours: "",
+            closing_hours: "", price: "", address: "", image: ""
+        });
+    } catch (error) {
+        console.error("New Doctor Creation failed:", error.response?.data || error.message);
+    }
+};
+  
 
   return (
     <div className="addDoctor-container">
@@ -21,49 +90,109 @@ const Signup = () => {
           <h2 className="my-4">Add a New Doctor</h2>
           
           <InputField 
-            type="Name" 
-            placeholder="Name" 
-            value={Name} 
-            onChange={(e) => setName(e.target.value)} 
+            type="text" 
+            placeholder="Name" name="name"
+            value={addDoctorfield.name} 
+            onChange={handleAddDoctorFieldChange} 
           />
 
           <InputField 
-            type="Phone" 
-            placeholder="Phone" 
-            value={phone} 
-            onChange={(e) => setPhone(e.target.value)} 
+            type="tel"    maxLength="11"
+            placeholder="Phone" name="phone"
+            value={addDoctorfield.phone} 
+            onChange={handleAddDoctorFieldChange} 
           />
 
           <InputField 
-            type="Email" 
-            placeholder="Email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
+            type="email" 
+            placeholder="Email" name="email"
+            value={addDoctorfield.email} 
+            onChange={handleAddDoctorFieldChange} 
           />
 
           <InputField 
             type="password" 
-            placeholder="Password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
+            placeholder="Password" name="password"
+            value={addDoctorfield.password} 
+            onChange={handleAddDoctorFieldChange} 
           />
 
           <InputField 
-            type="address" 
-            placeholder="Address" 
-            value={address} 
-            onChange={(e) => setAddress(e.target.value)} 
+            type="text" 
+            placeholder="Specialization" name="specialization"
+            value={addDoctorfield.specialization} 
+            onChange={handleAddDoctorFieldChange} 
+          />
+
+          <InputField 
+            type="number" 
+            placeholder="Experience" name="experience"
+            value={addDoctorfield.experience} 
+            onChange={handleAddDoctorFieldChange} 
+          />
+
+          <InputField 
+            type="days" 
+            placeholder="Working Days (e.g., Monday Tuesday Friday)" name="working_days" 
+            value={addDoctorfield.working_days} 
+            onChange={handleAddDoctorFieldChange} 
+          />
+
+          <InputField 
+            type="text" 
+            placeholder="Slots per Day (e.g., 10 10 8)" name="slots" 
+            value={addDoctorfield.slots} 
+            onChange={handleAddDoctorFieldChange} 
+          />
+
+          <InputField 
+            type="time" 
+            placeholder="Working Hours" name="opening_hours" 
+            value={addDoctorfield.opening_hours} 
+            onChange={handleAddDoctorFieldChange} 
+          />
+
+          <InputField 
+            type="time" 
+            placeholder="Closing Hours" name="closing_hours" 
+            value={addDoctorfield.closing_hours} 
+            onChange={handleAddDoctorFieldChange} 
+          />
+
+          <InputField 
+            type="number" 
+            placeholder="Fee" name="price" 
+            value={addDoctorfield.price} 
+            onChange={handleAddDoctorFieldChange} 
+          />
+
+          <InputField 
+            type="text" 
+            placeholder="Address" name="address"
+            value={addDoctorfield.address} 
+            onChange={handleAddDoctorFieldChange} 
           />
 
           <div className="addDoctor-image-container">
-            <input 
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-            />
+          <input 
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
           </div>
+          {addDoctorfield.image && (
+            <div>
+              <p>Preview:</p>
+              <img 
+                src={URL.createObjectURL(addDoctorfield.image)} 
+                alt="Preview" 
+                width="100"
+              />
+            </div>
+          )}
 
-          <ButtonComponent text="Submit" onClick={() => alert("Add New Doctor logic here")}  className='addDoctor-button'/>
+          <ButtonComponent text="Submit" onClick={(e) => handleAddDoctorSubmit(e)}  className='addDoctor-button'/>
 
     </div>
   );

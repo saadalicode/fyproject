@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import PatientListRow from "../components/PatientListRow";
 import jsonData from "../data/patients.json";
 import "./Patients.css";
 
 const Patients = () => {
-    const [patientsData, setPatientsData] = useState([]);
+    const [patientsData, setPatientsData] = useState([]); // later change it for only the login patient 
 
     useEffect(()=>{
-        setPatientsData(jsonData);
+        // setPatientsData(jsonData);
+        fetchPatientsData();
     },[]);
+
+    const fetchPatientsData = async () => {
+        try {
+            const response = await axios.get(
+                "http://127.0.0.1:8000/api/appointments",
+              );
+            //   console.log(" successful:", response.data);
+              setPatientsData(response.data);
+        } catch (error) {
+            console.error(" failed:", error.response?.data || error.message);
+          }
+    }
 
     return (
         <div className="patientsList-container">
@@ -25,7 +39,7 @@ const Patients = () => {
                 <tbody>
                 {patientsData.map((patient) => (
                     <PatientListRow 
-                        key={patient.appointment_id} 
+                        key={patient.id} 
                         patient={patient} 
                         classname="patientsList-row"
                         />

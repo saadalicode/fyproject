@@ -37,6 +37,39 @@
     font-size: 1.5rem;
     color: black;
   }
+
+  .doctorDetails-working-days {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px; 
+  }
+  
+  .doctorDetails-selectedDay {
+    border-radius: 7px;
+    border: 2px solid rgba(255, 0, 0, 0.838);
+    padding: 4px;
+    margin-right: 10px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth background color transition */
+  }
+  
+  .doctorDetails-selectedDay:hover {
+    background-color: rgba(255, 0, 0, 0.1); /* Light hover effect */
+  }
+  
+  .selectedDay {
+    background-color: rgba(255, 0, 0, 0.838); /* Change background when selected */
+    color: white; /* Text color changes to white when selected */
+  }
+  
+  .doctorDetails-slots {
+    margin-left: 10px;
+    font-weight: 600; /* Make the slot number bold */
+    color: #4A4A4A; /* Add a little darker color for the slot text */
+  }
+  
+
   /* Responsive for smaller screens */
   @media (max-width: 992px) {
     .doctorDetails-container {

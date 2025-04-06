@@ -39,7 +39,10 @@ class PatientsController extends Controller
     
         try {
             // Log::info('Incoming Request Data:', $request->all());
-            $imagePath = "images/patientByDefault.png";
+            // $imagePath = $image->storeAs('uploads/patinets', $imageName, 'public');
+    
+            // Create the public URL for the image
+            // $imageURL = asset('storage/' . $imagePath);
     
             // if ($request->hasFile('image')) {
             //     $image = $request->file('image');
@@ -51,6 +54,12 @@ class PatientsController extends Controller
             //     Log::error('No Image Found in Request');
             //     return response()->json(['error' => 'Image is required'], 400);
             // }
+
+            $imageName = 'patientByDefault.png';
+            $destinationPath = 'uploads/patients/' . $imageName;
+
+            // Generate the URL to access the image
+            $imageURL = asset('storage/' . $destinationPath);
     
             $patient = Patient::create([
                 'name' => $request->name,
@@ -58,7 +67,7 @@ class PatientsController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'address' => $request->address,
-                'image' => $imagePath,
+                'image' => $imageURL,
             ]);
     
             User::create([

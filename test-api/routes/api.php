@@ -21,14 +21,23 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/signup', [PatientsController::class, 'store']);
 // all registered patients
 Route::get('/patients', [PatientsController::class, 'index']);
-// create a new doctor
-Route::post('/doctors', [DoctorsController::class, 'store']);
+// add a new doctor
+Route::post('/addDoctor', [DoctorsController::class, 'store']);
+// shows all existing doctors
+Route::get('/doctors', [DoctorsController::class, 'index']);
+// shows specific existing doctors
+Route::get('/doctors/{id}', [DoctorsController::class, 'show']);
 
 
 use App\Http\Controllers\AppointmentController;
-
-Route::post('/appointments', [AppointmentController::class, 'store']);
+// show all of the appointments
 Route::get('/appointments', [AppointmentController::class, 'index']);
+Route::post('/appointments', [AppointmentController::class, 'store']);
+// show all appointments to doctor
+Route::get('/doctor/appointments', [AppointmentController::class, 'showAppointment']);
+
+// show specific appointment
+Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
 Route::put('/appointments/{id}/status', [AppointmentController::class, 'updateStatus']);
 
 

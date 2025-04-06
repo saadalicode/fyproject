@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import AppointmentListRow from "../components/AppointmentListRow";
 import jsonData from "../data/appointments.json";
 import "./Appointments.css";
@@ -9,7 +10,20 @@ const Appointments = () => {
     useEffect(()=>{
         const pendingAppointments = jsonData.filter(appointment => appointment.appointment_status === "pending");
         setAppointmentsData(pendingAppointments);
+        fetchAppointmentData();
     },[]);
+
+    const fetchAppointmentData = async () => {
+        try {
+            const response = await axios.get(
+                "http://127.0.0.1:8000/api/doctor/appointments",
+              );
+              console.log(" successful:", response.data);
+            //   setAppointmentsData(response.data);
+        } catch (error) {
+            console.error(" failed:", error.response?.data || error.message);
+          }
+    }
 
     return (
         <div className="appointmentsList-container">

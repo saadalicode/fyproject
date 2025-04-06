@@ -7,12 +7,12 @@ const PatientListRow = ({ patient, classname }) => {
     const navigate = useNavigate();
 
     const handlePatientDetials = () => {
-      navigate(`/patients/detail/${patient.appointment_id}`);
+      navigate(`/patients/detail/${patient.id}`);
     }
 
   return (
     <tr className={classname}>
-      <td>{patient.scheduler_name}</td>
+      <td>{patient.patient.name}</td>
       <td>{patient.patient_name}</td>
       <td>{patient.appointment_date}</td>
       <td>{patient.appointment_status}</td>
