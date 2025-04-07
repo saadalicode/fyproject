@@ -8,8 +8,8 @@ const Appointments = () => {
     const [appointmentsData, setAppointmentsData] = useState([]);
 
     useEffect(()=>{
-        const pendingAppointments = jsonData.filter(appointment => appointment.appointment_status === "pending");
-        setAppointmentsData(pendingAppointments);
+        // const pendingAppointments = jsonData.filter(appointment => appointment.appointment_status === "pending");
+        // setAppointmentsData(pendingAppointments);
         fetchAppointmentData();
     },[]);
 
@@ -18,8 +18,8 @@ const Appointments = () => {
             const response = await axios.get(
                 "http://127.0.0.1:8000/api/doctor/appointments",
               );
-              console.log(" successful:", response.data);
-            //   setAppointmentsData(response.data);
+            //   console.log(" successful:", response.data);
+              setAppointmentsData(response.data);
         } catch (error) {
             console.error(" failed:", error.response?.data || error.message);
           }
@@ -39,7 +39,7 @@ const Appointments = () => {
                 <tbody>
                 {appointmentsData.map((appointment) => (
                     <AppointmentListRow 
-                        key={appointment.appointment_id} 
+                        key={appointment.id} 
                         appointment={appointment} 
                         classname="appointmentsList-row"
                         />

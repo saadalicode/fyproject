@@ -6,6 +6,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\DoctorsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AppointmentActionController;
 
 
 Route::get('/test', function () {
@@ -32,13 +33,23 @@ Route::get('/doctors/{id}', [DoctorsController::class, 'show']);
 use App\Http\Controllers\AppointmentController;
 // show all of the appointments
 Route::get('/appointments', [AppointmentController::class, 'index']);
-Route::post('/appointments', [AppointmentController::class, 'store']);
+// show specific appointment by id
+Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
 // show all appointments to doctor
 Route::get('/doctor/appointments', [AppointmentController::class, 'showAppointment']);
-
-// show specific appointment
-Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
+// show specific appointment by patient name
+Route::get('/appointment/detail', [AppointmentController::class, 'showPreviousAppointment']);
+// create a new appointment
+Route::post('/doctors/appointment', [AppointmentController::class, 'store']);
+// update the current appointment
 Route::put('/appointments/{id}/status', [AppointmentController::class, 'updateStatus']);
+
+Route::put('/appointments/{id}/cancel', [AppointmentActionController::class, 'cancel']);
+Route::put('/appointments/{id}/reschedule', [AppointmentActionController::class, 'reschedule']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+});
+
 
 
 Route::get('/users', [UsersController::class, 'index']);

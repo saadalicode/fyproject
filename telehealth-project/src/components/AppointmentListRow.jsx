@@ -7,12 +7,12 @@ const AppointmentListRow = ({ appointment, classname }) => {
     const navigate = useNavigate();
 
     const handleCheckupClick = () => {
-      navigate(`/appointments/detail/${appointment.appointment_id}`);
+      navigate(`/appointments/detail/${appointment.id}`);
     }
 
   return (
     <tr className={classname}>
-      <td>{appointment.scheduler_name}</td>
+      <td>{appointment.patient.name}</td>
       <td>{appointment.appointment_date}</td>
       <td>{appointment.appointment_status}</td>
       <td>

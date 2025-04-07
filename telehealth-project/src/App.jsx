@@ -20,6 +20,8 @@ import Appointments from './screens/Appointments';
 import Checkup from './screens/Checkup';
 import PatientAppointmentDetails from './screens/PatientAppointmentDetails';
 import Profile from './screens/Profile';
+import CheckupSumbit from './screens/CheckupSubmit';
+import RescheduleAppointment from './screens/RescheduleAppointment';
 import "./App.css";
 
 const App = () => {
@@ -53,7 +55,9 @@ const App = () => {
               <Route path='/patients' element={<Patients />} />
               <Route path='/appointments' element={<Appointments />} /> 
               <Route path='/appointments/detail/:id' element={<Checkup />} /> 
+              <Route path='/appointments/detail/finalize/:id' element={<CheckupSumbit />} /> 
               <Route path='/patients/detail/:id' element={<PatientAppointmentDetails/>}></Route>
+              <Route path='/patients/detail/reschedule/:id' element={<RescheduleAppointment/>}></Route>
               <Route path='/profile/:id' element={<Profile/>}></Route>
             </Routes>
           </div>

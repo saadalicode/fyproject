@@ -13,12 +13,13 @@ class Appointment extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
+        'doctor_id',
         'patient_id',
         'patient_name',
-        'scheduler_name',
+        'patient_father_name',
+        'patient_age',
         'appointment_date',
         'appointment_status',
-        'doctor_id',
         'disease',
         'doctor_remarks',
         'rating'
@@ -45,4 +46,9 @@ class Appointment extends Model
     {
         return $this->belongsTo(Patient::class, 'patient_id');
     }
+    public function actions()
+    {
+        return $this->hasMany(AppointmentAction::class);
+    }
+
 }

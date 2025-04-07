@@ -19,8 +19,14 @@ const CustomNavbar = () => {
     else if(path.startsWith("/appointments/detail/")) {
       return "Check Up";
     }
+    else if(path.startsWith("appointments/detail/finalize/")) {
+      return "Check Up Finalize";
+    }
     else if(path.startsWith("/patients/detail/")) {
       return "Appointment Details";
+    }
+    else if(path.startsWith("/patients/detail/reschedule/")) {
+      return "Rescheule Appointment";
     }
     else if(path.startsWith("/profile/")) {
       return "Profile";
