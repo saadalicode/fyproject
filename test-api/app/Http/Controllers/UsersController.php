@@ -2,6 +2,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Patient;
+use App\Models\Doctor;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -41,7 +44,52 @@ class UsersController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
-        return response()->json($user);
+
+        if($user->role == 'admin'){
+            try {
+                $admin = Admin::where('email', $user->email)->first();
+                return response()->json([
+                    'user' => $admin,
+                    // 'token' => $token
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Login Failed',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        }
+        else if($user->role == 'doctor'){
+            try {
+                $doctor = Doctor::where('email', $user->email)->first();
+                return response()->json([
+                    'user' => $doctor,
+                    // 'token' => $token
+                ], 200);
+            } catch (\Exception $e) {
+        
+                return response()->json([
+                    'message' => 'Login Failed',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+        }
+        else{
+            try {
+                $patient = Patient::where('email', $user->email)->first();
+                return response()->json([
+                    'user' => $patient,
+                    // 'token' => $token
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Login Failed',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        }
+        // return response()->json($user);
     }
 
     public function update(Request $request, $id)
@@ -49,6 +97,32 @@ class UsersController extends Controller
         $user = User::find($id);
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if($user->role == "admin"){
+            $admin = Admin::where('emial', $user->email)->first();
+            return response()->json([
+                'message' => 'Login successful',
+                'user' => $admin,
+                // 'token' => $token
+            ], 200);
+        }
+        elseif($user->role == "doctor"){
+            $doctor = Doctor::where('emial', $user->email)->first();
+            return response()->json([
+                'message' => 'Login successful',
+                'user' => $doctor,
+                // 'token' => $token
+            ], 200);
+
+        }
+        else{
+            $patient = Patient::where('email', $user->email)->first();
+            return response()->json([
+                'message' => 'Login successful',
+                'user' => $patient,
+                // 'token' => $token
+            ], 200);
         }
 
         $user->update($request->only(['name', 'email', 'password', 'role']));

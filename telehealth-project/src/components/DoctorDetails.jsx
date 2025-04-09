@@ -22,8 +22,22 @@ const DoctorDetail = () => {
           const response = await axios.get(
             "http://127.0.0.1:8000/api/doctors/"+id,
           );
-        //   console.log(" successful:", response.data);
+          // console.log(" successful:", response.data);
           setDoctor(response.data);
+          const data = response.data;
+
+    // Parse the double-encoded strings
+    const workingDaysString = JSON.parse(data.working_days); // "Wednesday Friday Sunday"
+    const slotsString = JSON.parse(data.slots);              // "8 10 10"
+
+    const working_days = workingDaysString.split(" ");
+    const slots = slotsString.split(" ").map(Number); // convert to array of numbers
+
+    setDoctor({
+      ...data,
+      working_days,
+      slots,
+    });
     
         } catch (error) {
           console.error(" failed:", error.response?.data || error.message);
@@ -63,29 +77,26 @@ const DoctorDetail = () => {
                   <div className="mt-4">
                     <label className="text-gray-700 font-semibold">Select a day:</label>
                     <div className="space-y-2">
-                      {doctor.working_days.split(' ').map((day, index) => {
-                        // Split the slots string and find the corresponding slot count for the current day
-                        const slotsArray = doctor.slots.split(' '); // Split the slots string by space
-                        const availableSlots = parseInt(slotsArray[index]) || 0; // Get the corresponding slot for this day
+                      {doctor.working_days.map((day, index) => {
+                          const availableSlots = doctor.slots[index] || 0;
 
-                        // Skip days with 0 available slots
-                        if (availableSlots === 0) return null;
+                          if (availableSlots === 0) return null;
 
-                        // Apply a class if the day is selected
-                        const isSelected = day === selectedDay;
+                          const isSelected = day === selectedDay;
 
-                        return (
-                          <div key={index} className="doctorDetails-working-days">
-                            <div
-                              className={`doctorDetails-selectedDay ${isSelected ? 'selectedDay' : ''}`}
-                              onClick={() => setSelectedDay(day)} // Set selected day on click
-                            >
-                              {day}
-                            </div>
-                            <div className="doctorDetails-slots">{availableSlots} Slots</div>
-                          </div>
-                        );
+                          return (
+                              <div key={index} className="doctorDetails-working-days">
+                                  <div
+                                      className={`doctorDetails-selectedDay ${isSelected ? 'selectedDay' : ''}`}
+                                      onClick={() => setSelectedDay(day)}
+                                  >
+                                      {day}
+                                  </div>
+                                  <div className="doctorDetails-slots">{availableSlots} Slots</div>
+                              </div>
+                          );
                       })}
+
                     </div>
                   </div>
                 ) : (

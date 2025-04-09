@@ -22,7 +22,7 @@ const RescheduleAppointment = () => {
             const response = await axios.get(
                 "http://127.0.0.1:8000/api/appointments/"+id,
               );
-              console.log(" successful:", response.data);
+              // console.log(" successful:", response.data);
               setAppointment(response.data);
         } catch (error) {
             console.error(" failed:", error.response?.data || error.message);
@@ -94,23 +94,16 @@ const RescheduleAppointment = () => {
                 )}
 
                 {/* Book Appointment Button */}
-                <button
-                    className="mt-4 px-6 py-2 btn btn-primary text-dark rounded-md hover:bg-gray-700 transition"
-                    disabled={!selectedDay}
-                    onClick={() => handleClick()}
-                >
-                    Book Appointment
-                </button>
- 
+                {/* <ButtonComponent text="Book Appointment" className="book-appointment-button" disabled={!selectedDay}
+                    onClick={() => handleClick()}/> */}
+                    <button
+                        className="mt-4 px-6 py-2 btn btn-primary text-dark rounded-md hover:bg-gray-700 transition"
+                        disabled={!selectedDay}
+                        onClick={() => handleClick()}
+                    >
+                        Book Appointment
+                    </button>
 
-
-            {appointment.appointment_status === "pending" && (
-                <>
-                
-                <ButtonComponent text="Save" className="reschedule-button" onClick={()=> handleReschedule()} />
-                <ButtonComponent text="Cancel" className="cancle-button" onClick={() => handleCancel()}/>
-                </>
-            )}
         </div>
         <div className="reschedule-parent-container">
 
@@ -135,34 +128,34 @@ const RescheduleAppointment = () => {
 
                     {/* Available Days */}
                     {appointment.doctor.working_days && appointment.doctor.working_days.length > 0 ? (
-                    <div className="mt-4">
-                        <label className="text-gray-700 font-semibold">Select a new day:</label>
-                        <div className="space-y-2">
-                        {appointment.doctor.working_days.split(' ').map((day, index) => {
-                            // Split the slots string and find the corresponding slot count for the current day
-                            const slotsArray = appointment.doctor.slots.split(' '); // Split the slots string by space
-                            const availableSlots = parseInt(slotsArray[index]) || 0; // Get the corresponding slot for this day
+                      <div className="mt-4">
+                          <label className="text-gray-700 font-semibold">Select a new day:</label>
+                          <div className="space-y-2">
+                            {appointment.doctor.working_days.split(' ').map((day, index) => {
+                                // Split the slots string and find the corresponding slot count for the current day
+                                const slotsArray = appointment.doctor.slots.split(' '); // Split the slots string by space
+                                const availableSlots = parseInt(slotsArray[index]) || 0; // Get the corresponding slot for this day
 
-                            // Skip days with 0 available slots
-                            if (availableSlots === 0) return null;
+                                // Skip days with 0 available slots
+                                if (availableSlots === 0) return null;
 
-                            // Apply a class if the day is selected
-                            const isSelected = day === selectedDay;
+                                // Apply a class if the day is selected
+                                const isSelected = day === selectedDay;
 
-                            return (
-                            <div key={index} className="doctorDetails-working-days">
-                                <div
-                                className={`doctorDetails-selectedDay ${isSelected ? 'selectedDay' : ''}`}
-                                onClick={() => setSelectedDay(day)} // Set selected day on click
-                                >
-                                {day}
+                                return (
+                                <div key={index} className="doctorDetails-working-days">
+                                    <div
+                                    className={`doctorDetails-selectedDay ${isSelected ? 'selectedDay' : ''}`}
+                                    onClick={() => setSelectedDay(day)} // Set selected day on click
+                                    >
+                                      {day}
+                                    </div>
+                                    <div className="doctorDetails-slots">{availableSlots} Slots</div>
                                 </div>
-                                <div className="doctorDetails-slots">{availableSlots} Slots</div>
-                            </div>
-                            );
-                        })}
-                        </div>
-                    </div>
+                                );
+                            })}
+                          </div>
+                      </div>
                     ) : (
                     <p className="text-gray-500 mt-2">No available days</p>
                     )}

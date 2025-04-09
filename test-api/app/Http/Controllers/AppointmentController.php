@@ -64,7 +64,7 @@ class AppointmentController extends Controller
             'doctor_remarks' => 'nullable|string',
             'rating' => 'nullable|integer|min:0|max:5',
         ]);
-        $currentStatus = $request->input('appointment_status');
+        $currentStatus = $request->input('appointment_status'); // after doctor submit the form appointment_status updated as entertained
 
         try{
             $appointment = Appointment::findOrFail($id);

@@ -4,7 +4,7 @@ import InputField from "../components/InputField";
 import ButtonComponent from "../components/ButtonComponent";
 import "./AddDoctor.css";
 
-const Signup = () => {
+const AddDoctor = () => {
   const [addDoctorfield, setAddDoctorField] = useState({
     name: "",
     phone: "",
@@ -56,9 +56,8 @@ const Signup = () => {
     formData.append("specialization", addDoctorfield.specialization);
     formData.append("experience", addDoctorfield.experience);
 
-    // Convert arrays to space-separated strings
-    formData.append("working_days", addDoctorfield.working_days.split(',').join(' '));
-    formData.append("slots", addDoctorfield.slots.split(',').join(' ')); // Ensure slots are space-separated
+    formData.append("working_days", JSON.stringify(addDoctorfield.working_days.split(" ")));
+    formData.append("slots", JSON.stringify(addDoctorfield.slots.split(" ")));
 
     formData.append("opening_hours", formatTimeToHHMMSS(addDoctorfield.opening_hours));
     formData.append("closing_hours", formatTimeToHHMMSS(addDoctorfield.closing_hours));
@@ -132,14 +131,14 @@ const Signup = () => {
           />
 
           <InputField 
-            type="days" 
+            type="text" 
             placeholder="Working Days (e.g., Monday Tuesday Friday)" name="working_days" 
             value={addDoctorfield.working_days} 
             onChange={handleAddDoctorFieldChange} 
           />
 
           <InputField 
-            type="text" 
+            type="number" 
             placeholder="Slots per Day (e.g., 10 10 8)" name="slots" 
             value={addDoctorfield.slots} 
             onChange={handleAddDoctorFieldChange} 
@@ -198,4 +197,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default AddDoctor;

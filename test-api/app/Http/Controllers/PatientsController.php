@@ -40,21 +40,21 @@ class PatientsController extends Controller
         try {
             // Log::info('Incoming Request Data:', $request->all());
             // $imagePath = $image->storeAs('uploads/patinets', $imageName, 'public');
-    
-            // Create the public URL for the image
+            
+            //Create the public URL for the image
             // $imageURL = asset('storage/' . $imagePath);
-    
+            
             // if ($request->hasFile('image')) {
-            //     $image = $request->file('image');
-            //     $imageName = time() . '_' . $image->getClientOriginalName();
-            //     $imagePath = $image->storeAs('uploads/patients', $imageName, 'public');
-    
-            //     Log::info('Image Successfully Uploaded: ' . $imagePath);
-            // } else {
-            //     Log::error('No Image Found in Request');
-            //     return response()->json(['error' => 'Image is required'], 400);
-            // }
-
+                //     $image = $request->file('image');
+                //     $imageName = time() . '_' . $image->getClientOriginalName();
+                //     $imagePath = $image->storeAs('uploads/patients', $imageName, 'public');
+                
+                //     Log::info('Image Successfully Uploaded: ' . $imagePath);
+                // } else {
+                    //     Log::error('No Image Found in Request');
+                    //     return response()->json(['error' => 'Image is required'], 400);
+                    // }
+                    
             $imageName = 'patientByDefault.png';
             $destinationPath = 'uploads/patients/' . $imageName;
 

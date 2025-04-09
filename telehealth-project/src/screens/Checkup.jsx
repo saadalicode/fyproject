@@ -175,7 +175,7 @@ const Checkup = () => {
 
 
                 {/*  checkup Button */}
-                <ButtonComponent onClick={(e) => handleCheckupClick(e)} text="Finalize Checkup" className="checkup-button" />
+                <ButtonComponent onClick={(e) => handleCheckupClick(e)} text="Submit" className="checkup-button" />
 
             </div>
         </div>

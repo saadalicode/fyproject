@@ -29,10 +29,10 @@ class Doctor extends Model
         'password',
     ];
 
-    // protected $casts = [
-    //     'working_days' => 'array', // Store working days as array
-    //     'slots' => 'array', // Store slots as array
-    // ];
+    protected $casts = [
+        'working_days' => 'array', // Store working days as array
+        'slots' => 'array', // Store slots as array
+    ];
 
     public function appointments()
     {

@@ -39,8 +39,8 @@ class DoctorsController extends Controller
             'password' => 'required|string|min:6',
             'specialization' => 'required|string',
             'experience' => 'nullable|integer',
-            'working_days' => 'required|string',  // Ensures it's a string of space-separated days
-            'slots' => 'required|string', // Ensures it's a string of space-separated slots
+            'working_days' => 'required|json',
+            'slots' => 'required|json',
             'opening_hours' => 'required|date_format:H:i:s',
             'closing_hours' => 'required|date_format:H:i:s',
             'price' => 'required|numeric',
@@ -64,7 +64,10 @@ class DoctorsController extends Controller
             // Process and store the working days and slots
             // $workingDays = explode(" ", $request->working_days); // Convert to array
             // $slots = explode(" ", $request->slots); // Convert to array
-    
+
+            $workingDays = json_decode($request->working_days, true);
+            $slots = json_decode($request->slots, true);
+
             $doctor = Doctor::create([
                 'name' => $request->name,
                 'phone' => $request->phone,
@@ -72,8 +75,8 @@ class DoctorsController extends Controller
                 'password' => Hash::make($request->password),
                 'specialization' => $request->specialization,
                 'experience' => $request->experience,
-                'working_days' => implode(' ', explode(',', $request->working_days)), // Save working days as space-separated string
-                'slots' => implode(' ', explode(',', $request->slots)), // Save slots as space-separated string
+                'working_days' => $workingDays,
+                'slots' => $slots,
                 'opening_hours' => $request->opening_hours,
                 'closing_hours' => $request->closing_hours,
                 'price' => $request->price,

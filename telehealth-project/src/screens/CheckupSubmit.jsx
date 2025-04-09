@@ -66,7 +66,7 @@ const CheckupSumbit = () => {
             </div>
 
             <>           
-                <ButtonComponent text="Submit" className="checkup-submit-button" onClick={()=> handleCheckupSumit()} />
+                <ButtonComponent text="No Change" className="checkup-submit-button" onClick={()=> handleCheckupSumit()} />
                 <ButtonComponent text="Change" className="change-button" onClick={() => handleCheckupChange()}/>
             </>
             

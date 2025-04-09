@@ -31,6 +31,9 @@ const CustomNavbar = () => {
     else if(path.startsWith("/profile/")) {
       return "Profile";
     }
+    else if(path.startsWith("/setting/")) {
+      return "Setting";
+    }
 
     switch (path) {
       case "/":
