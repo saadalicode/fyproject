@@ -1,64 +1,71 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import jsonData from "../data/doctors";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import './DoctorDetails.css';
 
 const DoctorDetail = () => {
-    const { id } = useParams(); // Get doctor ID from URL
+    const { id } = useParams();
     const [doctor, setDoctor] = useState(null);
     const [selectedDay, setSelectedDay] = useState("");
-
-    useEffect(() => {
-        // const doctorData = jsonData.find((doc) => doc.id === parseInt(id));
-        // if (doctorData) {
-        //     setDoctor(doctorData);
-        // }
-        fetchDoctorData();
-    }, [id]);
-
-    const fetchDoctorData = async () => {
-        try {
-          const response = await axios.get(
-            "http://127.0.0.1:8000/api/doctors/"+id,
-          );
-          // console.log(" successful:", response.data);
-          setDoctor(response.data);
-          const data = response.data;
-
-    // Parse the double-encoded strings
-    const workingDaysString = JSON.parse(data.working_days); // "Wednesday Friday Sunday"
-    const slotsString = JSON.parse(data.slots);              // "8 10 10"
-
-    const working_days = workingDaysString.split(" ");
-    const slots = slotsString.split(" ").map(Number); // convert to array of numbers
-
-    setDoctor({
-      ...data,
-      working_days,
-      slots,
-    });
-    
-        } catch (error) {
-          console.error(" failed:", error.response?.data || error.message);
-        }
-      };
-
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [currentWeekSlots, setCurrentWeekSlots] = useState([]);
     const navigate = useNavigate();
 
+    
+    const fetchDoctorData = async () => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}`);
+            setDoctor(response.data);
+            // const { working_days, slots } = response.data;
+            // setDoctor({ ...response.data, working_days, slots });
+            
+            const weeklyResponse = await axios.get(`http://127.0.0.1:8000/api/doctor/weekly-slots/${id}`);
+            const currentWeek = weeklyResponse.data.currentWeek;
+            
+            setCurrentWeekSlots(currentWeek);
+        } catch (error) {
+            console.error("Error fetching doctor:", error.response?.data || error.message);
+        }
+    };
+    
+    useEffect(() => {
+        fetchDoctorData();
+    }, [id]);
+    
     const handleClick = () => {
-        navigate("/login"); // Redirect to the login page
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user && selectedDay && selectedDate) {
+            const formattedDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
+            navigate(`/book-appointment/${doctor.id}/${selectedDay}/${formattedDate}`);
+        } else {
+            navigate("/login");
+        }
     };
 
-    
+    const isDayMatch = (date) => {
+        if (!selectedDay) return false;
+        const today = new Date();
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+        const slotMatch = currentWeekSlots.find(slot => {
+            const slotDate = new Date(slot.date);
+            return (
+                dayName === selectedDay &&
+                slotDate.toDateString() === date.toDateString() &&
+                slot.availableSlots > 0
+            );
+        });
+        return slotMatch && date >= today;
+    };
+
     if (!doctor) {
         return <h2 className="text-center text-red-600 text-2xl">Doctor not found</h2>;
     }
-    // console.log(selectedDay);
 
     return (
         <div className="doctorDetails-container">
-             <img
+            <img
                 src={doctor.image}
                 alt={`${doctor.name} Image`}
                 className="doctorDetails-image-container"
@@ -68,50 +75,64 @@ const DoctorDetail = () => {
                 <p className="text-lg text-gray-600">{doctor.specialization}</p>
                 <p className="text-gray-500">Experience: {doctor.experience} years</p>
                 <p className="text-green-600 font-bold">Fee: {doctor.price}</p>
-                {/* <p className="text-gray-500">Available Slots: {doctor.slots}</p> */}
                 <p className="text-gray-500">Opening Hours: {doctor.opening_hours}</p>
                 <p className="text-gray-500">Closing Hours: {doctor.closing_hours}</p>
 
-                {/* Available Days  */}
-                {doctor.working_days && doctor.working_days.length > 0 ? (
-                  <div className="mt-4">
-                    <label className="text-gray-700 font-semibold">Select a day:</label>
-                    <div className="space-y-2">
-                      {doctor.working_days.map((day, index) => {
-                          const availableSlots = doctor.slots[index] || 0;
+                {/* Working Days */}
+                {doctor.working_days?.map((day, index) => {
+                    const daySlots = currentWeekSlots.filter(slot => slot.day === day);
+                    const totalAvailableSlots = daySlots.reduce((sum, s) => sum + s.availableSlots, 0);
+                    const totalMaxSlots = doctor.slots[index] ?? 0;
 
-                          if (availableSlots === 0) return null;
+                    const isDisabled = totalAvailableSlots === 0;
 
-                          const isSelected = day === selectedDay;
+                    return (
+                        <div key={index} className="doctorDetails-working-days">
+                            <div
+                                className={`doctorDetails-selectedDay ${day === selectedDay ? 'selectedDay' : ''} ${isDisabled ? 'disabledDay' : ''}`}
+                                onClick={() => {
+                                    if (!isDisabled) {
+                                        setSelectedDay(day);
+                                        setSelectedDate(null);
+                                    }
+                                }}
+                                style={{ cursor: isDisabled ? 'not-allowed' : 'pointer', opacity: isDisabled ? 0.6 : 1 }}
+                            >
+                                {day}
+                            </div>
+                            <div className="doctorDetails-slots">
+                                {totalAvailableSlots} Slots (of {totalMaxSlots})
+                            </div>
+                        </div>
+                    );
+                })}
 
-                          return (
-                              <div key={index} className="doctorDetails-working-days">
-                                  <div
-                                      className={`doctorDetails-selectedDay ${isSelected ? 'selectedDay' : ''}`}
-                                      onClick={() => setSelectedDay(day)}
-                                  >
-                                      {day}
-                                  </div>
-                                  <div className="doctorDetails-slots">{availableSlots} Slots</div>
-                              </div>
-                          );
-                      })}
 
+                {/* Calendar (Date Picker) */}
+                {selectedDay && currentWeekSlots.some(slot => slot.day === selectedDay && slot.availableSlots > 0) && (
+                    <div className="mt-4">
+                        <label className="text-gray-700 font-semibold">Select a {selectedDay}:</label>
+                        <DatePicker
+                            selected={selectedDate}
+                            onChange={(date) => setSelectedDate(date)}
+                            filterDate={isDayMatch}
+                            placeholderText={`Select a ${selectedDay}`}
+                            minDate={new Date()}
+                            dateFormat="yyyy-MM-dd"
+                            className="p-2 border rounded-md"
+                        />
                     </div>
-                  </div>
-                ) : (
-                  <p className="text-gray-500 mt-2">No available days</p>
                 )}
 
-                {/* Book Appointment Button */}
+
+                {/* Book Appointment */}
                 <button
                     className="mt-4 px-6 py-2 btn btn-primary text-dark rounded-md hover:bg-gray-700 transition"
-                    disabled={!selectedDay}
-                    onClick={() => handleClick()}
+                    disabled={!selectedDay || !selectedDate}
+                    onClick={handleClick}
                 >
                     Book Appointment
                 </button>
-
             </div>
         </div>
     );

@@ -77,3 +77,16 @@
 .custom-button:hover {
   color: black;
 }
+
+.error-message {
+  color: red;
+  margin: 4px 0px;
+  font-weight: 14px;
+  font-style: italic;
+}
+
+.success-message {
+  color: green;
+  margin: 10px 0px;
+  font-weight: bold;
+}

@@ -23,6 +23,8 @@ class Doctor extends Model
         'price',
         'address',
         'image',
+        'location',
+        'available',
     ];
 
     protected $hidden = [

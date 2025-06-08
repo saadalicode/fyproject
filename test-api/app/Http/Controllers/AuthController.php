@@ -24,8 +24,13 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         // Check if user exists and password matches
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid email or password'], 401);
+        if($user){
+            if(!Hash::check($request->password, $user->password)){
+                return response()->json(['message' => 'Invalid password.'], 401);
+            }
+        }
+        else {
+            return response()->json(['message' => 'Invalid email.'], 401);
         }
 
         // return response()->json($user);
@@ -36,8 +41,8 @@ class AuthController extends Controller
             try {
                 $admin = Admin::where('email', $user->email)->first();
                 return response()->json([
-                    'message' => 'Login successful',
                     'user' => $admin,
+                    'role' => $user->role
                     // 'token' => $token
                 ], 200);
             } catch (\Exception $e) {
@@ -53,8 +58,8 @@ class AuthController extends Controller
             try {
                 $doctor = Doctor::where('email', $user->email)->first();
                 return response()->json([
-                    'message' => 'Login successful',
                     'user' => $doctor,
+                    'role' => $user->role
                     // 'token' => $token
                 ], 200);
             } catch (\Exception $e) {
@@ -71,8 +76,8 @@ class AuthController extends Controller
             try {
                 $patient = Patient::where('email', $user->email)->first();
                 return response()->json([
-                    'message' => 'Login successful',
                     'user' => $patient,
+                    'role' => $user->role
                     // 'token' => $token
                 ], 200);
             } catch (\Exception $e) {

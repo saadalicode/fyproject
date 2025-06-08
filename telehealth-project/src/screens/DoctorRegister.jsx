@@ -1,10 +1,15 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom"; 
 import InputField from "../components/InputField";
 import ButtonComponent from "../components/ButtonComponent";
-import "./AddDoctor.css";
+import axios from "axios";
+import "./DoctorRegister.css";
 
-const AddDoctor = () => {
+const DoctorRegister = () => {
+  const navigate = useNavigate();
+  const [isChecked, setIsChecked] = useState(false);
+  const [error, setError] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
   const [addDoctorfield, setAddDoctorField] = useState({
     name: "",
     phone: "",
@@ -22,7 +27,7 @@ const AddDoctor = () => {
     location: "",
   });
 
-  const handleImageChange = (e) => {
+   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file){
       setAddDoctorField((prevFields) => ({
@@ -30,22 +35,29 @@ const AddDoctor = () => {
         image: file
       }));
     }
-  };
+   };
   
 
-  const handleAddDoctorFieldChange = (e) => {
-    const { name, value } = e.target;
-    setAddDoctorField((prevFields) => ({
-      ...prevFields,
-      [name]: value
-    }));
-  };
+    const handleAddDoctorFieldChange = (e) => {
+        const { name, value } = e.target;
+
+        if (name === "name") {
+        const capitalized = value
+        .split(" ")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(" ");
+        setAddDoctorField((prev) => ({ ...prev, [name]: capitalized }));
+        } else {
+            setAddDoctorField((prev) => ({ ...prev, [name]: value }));
+        }
+    };
+
 
   const formatTimeToHHMMSS = (time) => {
     return time ? time + ":00" : "";
   };
   
-  const handleAddDoctorSubmit = async (e) => {
+  const handleDoctorRegisterSubmit = async (e) => {
     e.preventDefault();
 
     // Prepare data
@@ -68,36 +80,58 @@ const AddDoctor = () => {
     formData.append("image", addDoctorfield.image);
     formData.append("location", addDoctorfield.location);
 
+    console.log(formData);
+
     try {
         const response = await axios.post(
-            "http://127.0.0.1:8000/api/addDoctor",
+            "http://127.0.0.1:8000/api/doctor/signup",
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
         );
-        // console.log("New Doctor Created successfully:", response.data);
+        console.log("New Doctor Created successfully:", response.data);
         // empty fields after successful creation
         setAddDoctorField({
             name: "", phone: "", email: "", password: "", specialization: "",
             experience: "", working_days: "", slots: "", opening_hours: "",
             closing_hours: "", price: "", address: "", image: "", location: "",
         });
+        setSuccessMessage(response.data.message);
+
     } catch (error) {
-        console.error("New Doctor Creation failed:", error.response?.data || error.message);
+      if (error.response && error.response.status === 422) {
+        // Laravel validation errors
+        setError(error.response.data.error);
+        setSuccessMessage("");
+      } else {
+        setError({ general: "Something went wrong. Please try again." });
+        setSuccessMessage("");
+      }
     }
 };
-  
+
+
+  const handleCheckBoxChange = () => {
+    setIsChecked(!isChecked);
+  };
 
   return (
-    <div className="addDoctor-container">
-        
-          <h2 className="my-4">Add a New Doctor</h2>
+    <div className="register-parent-container">
+      <div className="register-child-container">
+        <div className="register-child ssignup-container">
+          {/* {successMessage && <p className="success-message">{successMessage}</p>} */}
           
+          <h2 className="ssignup-title">Doctor Signup</h2>
+
+          {successMessage && <p className="success-msg">{successMessage}</p>}
+          {error.general && <p className="error-message">{error.general}</p>}
+
           <InputField 
             type="text" 
             placeholder="Name" name="name"
             value={addDoctorfield.name} 
             onChange={handleAddDoctorFieldChange} 
           />
+          {error.name && <span className="error-message">{error.name[0]}</span>}
 
           <InputField 
             type="tel" pattern="[0-9]{11}"   maxLength="11"
@@ -105,6 +139,7 @@ const AddDoctor = () => {
             value={addDoctorfield.phone} 
             onChange={handleAddDoctorFieldChange} 
           />
+          {error.phone && <span className="error-message">{error.phone[0]}</span>}
 
           <InputField 
             type="email" 
@@ -112,6 +147,7 @@ const AddDoctor = () => {
             value={addDoctorfield.email} 
             onChange={handleAddDoctorFieldChange} 
           />
+          {error.email && <span className="error-message">{error.email[0]}</span>}
 
           <InputField 
             type="password" 
@@ -119,6 +155,7 @@ const AddDoctor = () => {
             value={addDoctorfield.password} 
             onChange={handleAddDoctorFieldChange} 
           />
+          {error.password && <span className="error-message">{error.password[0]}</span>}
 
           <InputField 
             type="text" 
@@ -126,7 +163,7 @@ const AddDoctor = () => {
             value={addDoctorfield.specialization} 
             onChange={handleAddDoctorFieldChange} 
           />
-
+          
           <InputField 
             type="number" 
             placeholder="Experience" name="experience"
@@ -178,6 +215,7 @@ const AddDoctor = () => {
             value={addDoctorfield.address} 
             onChange={handleAddDoctorFieldChange} 
           />
+          {error.address && <span className="error-message">{error.address[0]}</span>}
 
           <InputField 
             type="text" 
@@ -204,11 +242,32 @@ const AddDoctor = () => {
               />
             </div>
           )}
+          
+          <div className="checkBox" onClick={handleCheckBoxChange}>
+            <div className={isChecked ? "outer-checkBox checkedBox" : "outer-checkBox"}>
+              <div className={isChecked ? "inner-checkBox" : ""}></div>
+            </div>
+            <label className="form-check-label">
+              I Agree to <Link to={'/signup/terms&conditions'} className="termsAndConditions">terms and conditions</Link>.
+            </label>
+          </div>
 
-          <ButtonComponent text="Submit" onClick={(e) => handleAddDoctorSubmit(e)}  className='addDoctor-button'/>
+          <ButtonComponent
+            text="Sign up"
+            onClick={(e) => handleDoctorRegisterSubmit(e)}
+            className={`custom-button ${!isChecked ? "disabled" : ""}`}
+            disabled={!isChecked}
+          />
+        </div>
 
+        <div className="register-child llogin-container">
+          <p className="llogin-text">Already Registered?</p>
+          <p className="llogin-text">If you already have registered, then log in.</p>
+          <Link to="/login" className="llogin-link">Log in</Link>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default AddDoctor;
+export default DoctorRegister;

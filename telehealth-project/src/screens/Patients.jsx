@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PatientListRow from "../components/PatientListRow";
-import jsonData from "../data/patients.json";
+import jsonData from "../data/appointments.json";
 import "./Patients.css";
 
 const Patients = () => {
-    const [patientsData, setPatientsData] = useState([]); // later change it for only the login patient 
+    const [patientsData, setPatientsData] = useState([]);
 
     useEffect(()=>{
-        // setPatientsData(jsonData);
-        fetchPatientsData();
+        // const pendingAppointments = jsonData.filter(appointment => appointment.appointment_status === "pending");
+        // setAppointmentsData(pendingAppointments);
+        fetchpatientData();
     },[]);
 
-    const fetchPatientsData = async () => {
+    const fetchpatientData = async () => {
         try {
             const response = await axios.get(
-                "http://127.0.0.1:8000/api/appointments",
+                "http://127.0.0.1:8000/api/patients/appointments",
               );
             //   console.log(" successful:", response.data);
               setPatientsData(response.data);
@@ -30,7 +31,6 @@ const Patients = () => {
                 <thead className="patientsList-thead">
                 <tr>
                     <th>Scheduler Name</th>
-                    <th>Patient Name</th>
                     <th>Appointment Date</th>
                     <th>Appointment Status</th>
                     <th>Action</th>

@@ -36,31 +36,22 @@ class PatientsController extends Controller
             Log::error('Validation Failed:', $validator->errors()->toArray());
             return response()->json(['error' => $validator->errors()], 422);
         } 
-    
-        try {
-            // Log::info('Incoming Request Data:', $request->all());
-            // $imagePath = $image->storeAs('uploads/patinets', $imageName, 'public');
-            
-            //Create the public URL for the image
-            // $imageURL = asset('storage/' . $imagePath);
-            
-            // if ($request->hasFile('image')) {
-                //     $image = $request->file('image');
-                //     $imageName = time() . '_' . $image->getClientOriginalName();
-                //     $imagePath = $image->storeAs('uploads/patients', $imageName, 'public');
-                
-                //     Log::info('Image Successfully Uploaded: ' . $imagePath);
-                // } else {
-                    //     Log::error('No Image Found in Request');
-                    //     return response()->json(['error' => 'Image is required'], 400);
-                    // }
-                    
-            $imageName = 'patientByDefault.png';
-            $destinationPath = 'uploads/patients/' . $imageName;
 
-            // Generate the URL to access the image
-            $imageURL = asset('storage/' . $destinationPath);
-    
+        try {
+            // Check if the patient uploaded an image
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imagePath = $image->storeAs('uploads/patients', $imageName, 'public');
+                $imageURL = asset('storage/' . $imagePath);
+            } else {
+                // If no image was uploaded, use the default patient image
+                $imageName = 'patientByDefault.png';
+                $destinationPath = 'uploads/patients/' . $imageName;
+                $imageURL = asset('storage/' . $destinationPath);
+            }
+
+            // Create the patient record
             $patient = Patient::create([
                 'name' => $request->name,
                 'phone' => $request->phone,
@@ -69,25 +60,25 @@ class PatientsController extends Controller
                 'address' => $request->address,
                 'image' => $imageURL,
             ]);
-    
+
+            // Create the user record (for authentication)
             User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => 'patient',
             ]);
-    
+
             return response()->json(["message" => "New patient registered successfully.", "data" => $patient], 201);
-    
+
         } catch (\Exception $e) {
-            // Log::error('Error Storing Patient: ' . $e->getMessage());
-    
             return response()->json([
                 'message' => 'Patient not created',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
+
 
     public function show($id)
     {

@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('specialization');
             $table->integer('experience')->nullable();
-            $table->json('working_days'); // Simple string type not json
-            $table->json('slots'); // simple string not json
+            $table->text('working_days')->nullable(); // JSON-like string
+            $table->text('slots')->nullable();
             $table->time('opening_hours');
             $table->time('closing_hours');
             $table->decimal('price', 8, 2);

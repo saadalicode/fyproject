@@ -22,7 +22,7 @@ const DoctorListRow = ({ doctor, onDelete, classname }) => {
       <td>{doctor.email}</td>
       <td>{doctor.specialization}</td>
       <td>
-        <img src={`/assets/images/doctors/${doctor.image}`}  alt="doctor" style={{ width: "40px", height: "40px" }} />
+        <img src={doctor.image} alt={`${doctor.name} Image`} style={{ width: "40px", height: "40px" }} />
       </td>
       <td>
         <ButtonComponent className="edit-button" text="Edit" onClick={handleEditClick} />

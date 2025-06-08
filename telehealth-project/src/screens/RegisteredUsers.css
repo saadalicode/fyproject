@@ -1,0 +1,46 @@
+.registered-users-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.registered-user-button {
+    color: white;
+    border-radius: 10px;
+    width: 250px;
+    height: 250px;
+    text-align: center;
+    font-size: x-large;
+    font-weight: bolder;
+    margin: 10px 20px;
+}
+.patient-list-button {
+    background-color: coral;
+    border: 2px solid coral;   
+    box-shadow: 0px 4px 10px coral;
+}
+
+.doctor-list-button {
+    background-color:cornflowerblue;
+    border: 2px solid cornflowerblue;
+    box-shadow: 0px 4px 10px cornflowerblue;
+}
+
+.admin-list-button {
+    background-color: teal;
+    border: 2px solid teal;
+    box-shadow: 0px 4px 10px teal;
+}
+
+@media (max-width: 992px) {
+    .registered-users-container {
+        display: flex;
+        flex-direction: column;
+        /* justify-content: center; */
+        align-items: center;
+    }
+
+    .registered-user-button {
+        margin: 20px 10px;
+    }
+}

@@ -6,18 +6,17 @@ import "./PatientListRow.css";
 const PatientListRow = ({ patient, classname }) => {
     const navigate = useNavigate();
 
-    const handlePatientDetials = () => {
-      navigate(`/patients/detail/${patient.id}`);
+    const handleCheckupClick = () => {
+      navigate(`/appointments/detail/${patient.id}`);
     }
 
   return (
     <tr className={classname}>
       <td>{patient.patient.name}</td>
-      <td>{patient.patient_name}</td>
       <td>{patient.appointment_date}</td>
       <td>{patient.appointment_status}</td>
       <td>
-        <ButtonComponent className="patient-details-button" text="Details" onClick={handlePatientDetials} />
+        <ButtonComponent className="patient-button" text="Checkup" onClick={handleCheckupClick} />
       </td>
     </tr>
   );

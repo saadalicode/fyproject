@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('patient_father_name')->nullable(); // NEW
             $table->integer('patient_age')->nullable(); 
             $table->date('appointment_date');
-            $table->enum('appointment_status', ['pending', 'reschedule', 'entertained', 'cancelled'])->default('pending');
+            $table->enum('appointment_status', ['pending', 'rescheduled', 'entertained', 'cancelled'])->default('pending');
             $table->string('disease')->nullable();
             $table->text('doctor_remarks')->nullable();
             $table->tinyInteger('rating')->default(0)->comment('Rating from 0 to 5');

@@ -101,3 +101,18 @@
     border: none; */
     margin-bottom: 8px;
   }
+
+  .reschedule-label {
+    display: block;
+    font-weight: 500;
+  }
+
+  .reschedule-remarks {
+    border: 2px solid rgba(255, 0, 0, 0.838);
+    border-radius: 20px;
+    margin-bottom: 7px;
+    margin-right: auto;
+    display: block;
+    padding: 4px;
+    width: 60%;
+  }

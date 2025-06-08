@@ -9,6 +9,8 @@ const PatientAppointmentDetails = () => {
     const { id } = useParams();    // Get appointment id from url
     const [appointment, setAppointment] = useState(null);
     const navigate = useNavigate();
+    const userRole = localStorage.getItem("role");
+    const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
         fetchAppointmentData();
@@ -36,8 +38,8 @@ const PatientAppointmentDetails = () => {
     }
 
     const handleCancel = () => {
-        alert("cancel clicked");
-        // navigate(`/patients/detail/cancel/${appointment.appointment_id}`);
+        alert("cancel");
+        navigate(`/patients/detail/cancel/${appointment.id}`);
     }
 
     return (
@@ -69,7 +71,6 @@ const PatientAppointmentDetails = () => {
 
             {appointment.appointment_status === "pending" && (
                 <>
-                
                 <ButtonComponent text="Reschedule" className="reschedule-button" onClick={handleReschedule} />
                 <ButtonComponent text="Cancel" className="cancle-button" onClick={handleCancel}/>
                 </>

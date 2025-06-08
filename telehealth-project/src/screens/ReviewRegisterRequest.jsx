@@ -3,9 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import ButtonComponent from "../components/ButtonComponent";
 import axios from "axios";
-import "./EditDoctor.css";
+import "./ReviewRegisterRequest.css";
 
-const EditDoctor = () => {
+const ReviewRegisterRequest = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ const EditDoctor = () => {
     setImage(e.target.files[0]);
   };
 
-  const handleSubmit = async () => {
+  const handleAcceptRegisterRequestSubmit = async () => {
     try {
       const formData = new FormData();
       for (const key in doctor) {
@@ -49,25 +49,37 @@ const EditDoctor = () => {
         formData.append("image", image);
       }
 
-      await axios.post(`http://127.0.0.1:8000/api/doctors/update/${id}`, formData, {
+      const response = await axios.post(`http://127.0.0.1:8000/api/doctors/registration/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      alert("Doctor updated successfully.");
-      navigate("/");
+      alert(response.data.message);
+      navigate("/doctors");
     } catch (error) {
-      console.error("Update error:", error.response?.data || error.message);
-      setErrorMsg("Failed to update doctor. Please check your input and try again.");
+      console.error("Creation error:", error.response?.data || error.message);
+      setErrorMsg("Failed to register doctor. Please check your input and try again.");
     }
+  };
+
+  const handleDeclineRegisterRequestSubmit = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/doctors/delete/${id}`);
+      alert(response.data.message);
+      navigate("/doctors");
+    } catch (error){
+      const errorMsg = error.response?.data?.message || "Failed to delete doctor. Try again.";
+      setErrorMsg(errorMsg);
+    }
+
   };
 
   if (loading) return <p>Loading doctor data...</p>;
 
   return (
     <div className="editDoctor-container">
-      <h2 className="my-4">Edit Doctor</h2>
+      <h2 className="my-4">Review Add Doctor Request Data</h2>
       {errorMsg && <p className="error">{errorMsg}</p>}
 
       <InputField
@@ -197,10 +209,12 @@ const EditDoctor = () => {
           </div>
         )}
       </div>
-
-      <ButtonComponent text="Submit" onClick={handleSubmit} className="editDoctor-button" />
+      <div className="button-container">
+        <ButtonComponent text="Accept" onClick={handleAcceptRegisterRequestSubmit} className="accept-register-request-button" />
+        <ButtonComponent text="Decline" onClick={handleDeclineRegisterRequestSubmit} className="decline-register-request-button" />
+      </div>
     </div>
   );
 };
 
-export default EditDoctor;
+export default ReviewRegisterRequest;
