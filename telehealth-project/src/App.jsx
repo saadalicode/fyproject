@@ -32,6 +32,11 @@ import DoctorRegisterRequest from './screens/DoctorRegisterRequest';
 import ReviewRegisterRequest from './screens/ReviewRegisterRequest';
 import RegisteredUsers from './screens/RegisteredUsers';
 import AllDoctors from './screens/AllDoctors';
+import AllPatients from './screens/AllPatients';
+import PatientsList from './screens/PatientsList';
+import EditPatient from './screens/EditPatient';
+import SetAvailability from './screens/SetAvailability';
+import PaymentPage from './screens/PaymentPage';
 import "./App.css";
 
 const App = () => {
@@ -58,13 +63,20 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/doctors" element={<Doctors />} />
+              <Route path="/schedule" element={<SetAvailability />} />
               <Route path="/doctors/:id" element={<DoctorDetail />} />
               <Route path="/services" element={<Services />} />
               <Route path="/book-appointment/:id/:day/:date" element={<BookAppointment />} />
+              <Route path="/pay" element={<PaymentPage />} />
+              {/* <Route path="/payment-success" element={<PaymentSuccess />} /> */}
+
 
               <Route path='/dashboard/users' element={<RegisteredUsers/>} />
               <Route path='/dashboard/users/doctors' element={<AllDoctors/>} />
-               
+              <Route path='/dashboard/users/patients' element={<AllPatients/>} />
+              <Route path='/dashboard/patients' element={<PatientsList/>} /> 
+              <Route path='/dashboard/patients/edit/:id' element={<EditPatient/>} /> 
+    
               {/* Role-based pages */}
               <Route path="/dashboard" element={
                 <ProtectedRoute allowedRoles={["admin"]}>

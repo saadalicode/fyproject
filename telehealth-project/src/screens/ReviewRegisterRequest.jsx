@@ -18,7 +18,7 @@ const ReviewRegisterRequest = () => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/api/doctors/edit/${id}`);
       setDoctor(response.data);
-      console.log(response.data.image);
+      // console.log(response.data.image);
       setLoading(false);
     } catch (error) {
       setErrorMsg("Failed to fetch doctor data.");

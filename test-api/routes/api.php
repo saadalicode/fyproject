@@ -7,6 +7,8 @@ use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\DoctorsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentActionController;
+use App\Http\Controllers\DoctorBlockedDateController;
+use App\Http\Controllers\PaymentController;
 
 
 Route::get('/test', function () {
@@ -27,8 +29,18 @@ Route::get('/doctors/pending', [DoctorsController::class, 'pendingRegistrations'
 // registration of doctor accept by admin 
 Route::post('doctors/registration/{id}', [DoctorsController::class, 'registration']);
 
+Route::get   ('/doctor/{doctor}/blocked-dates', [DoctorBlockedDateController::class, 'index']);     // list
+Route::post  ('/doctor/{doctor}/blocked-dates', [DoctorBlockedDateController::class, 'store']);     // block
+Route::delete('/doctor/{doctor}/blocked-dates/{date}',[DoctorBlockedDateController::class, 'destroy']);
+
 // all registered patients
 Route::get('/patients', [PatientsController::class, 'index']);
+// shows patient's existing data populated in an editable form
+Route::get('/patients/edit/{id}', [PatientsController::class, 'edit']);
+// to update the patient data
+Route::post('/patients/update/{id}', [PatientsController::class, 'update']);
+// to delete the patient data
+Route::get('/patients/delete/{id}', [PatientsController::class, 'destroy']);
 // add a new doctor by admin
 Route::post('/addDoctor', [DoctorsController::class, 'create']);
 // shows all existing doctors
@@ -62,6 +74,13 @@ Route::put('/appointments/{id}/status', [AppointmentController::class, 'updateSt
 
 Route::post('/appointments/cancel/{appointmentId}', [AppointmentActionController::class, 'cancel']);
 Route::post('/appointments/reschedule/{appointmentId}', [AppointmentActionController::class, 'reschedule']);
+
+Route::post('/payments/create-intent', [AppointmentController::class,'createIntent']);
+Route::post('/payments/confirm',        [AppointmentController::class,'confirmIntent']);
+Route::post('/webhook', [PaymentController::class, 'handleWebhook']);
+
+
+
 
 Route::middleware(['auth:sanctum'])->group(function () {
 });

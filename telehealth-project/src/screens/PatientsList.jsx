@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import AllPatientListRow from "../components/AllPatientsListRow";
+import PatientListRow from "../components/PatientListRow";
 import './DoctorList.css';
 
-const AllPatients = () => {
+const PatientsList = () => {
   const navigate = useNavigate();
   const [patientsData, setPatientsData] = useState([]);
   const [message, setMessage] = useState(""); // New state for backend message
@@ -20,13 +20,11 @@ const AllPatients = () => {
         setPatientsData([]);
         setMessage("No Patient found.");
       }
-
       // console.log(response.data);
     } catch (error) {
       const errorMsg = error.response?.data?.message || "Error fetching patients.";
       setMessage(errorMsg);
       setPatientsData([]);
-      // console.error("Error fetching doctors:", errorMsg);
     }
   };
 
@@ -52,7 +50,7 @@ const AllPatients = () => {
           </thead>
           <tbody>
             {patientsData.map((patient) => (
-              <AllPatientListRow
+              <PatientListRow
                 key={patient.id}
                 patient={patient}
                 classname="doctorList-tr"
@@ -65,4 +63,4 @@ const AllPatients = () => {
   );
 };
 
-export default AllPatients;
+export default PatientsList;

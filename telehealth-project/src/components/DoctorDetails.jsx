@@ -18,8 +18,6 @@ const DoctorDetail = () => {
         try {
             const response = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}`);
             setDoctor(response.data);
-            // const { working_days, slots } = response.data;
-            // setDoctor({ ...response.data, working_days, slots });
             
             const weeklyResponse = await axios.get(`http://127.0.0.1:8000/api/doctor/weekly-slots/${id}`);
             const currentWeek = weeklyResponse.data.currentWeek;
@@ -40,18 +38,19 @@ const DoctorDetail = () => {
             const formattedDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
             navigate(`/book-appointment/${doctor.id}/${selectedDay}/${formattedDate}`);
         } else {
-            navigate("/login");
+            navigate("/login", { state: { from: location.pathname } });
         }
     };
 
     const isDayMatch = (date) => {
         if (!selectedDay) return false;
         const today = new Date();
+        today.setHours(0, 0, 0, 0);
         const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
         const slotMatch = currentWeekSlots.find(slot => {
             const slotDate = new Date(slot.date);
             return (
-                dayName === selectedDay &&
+                dayName === selectedDay && !doctor.blocked_dates?.includes(formatted) &&
                 slotDate.toDateString() === date.toDateString() &&
                 slot.availableSlots > 0
             );
@@ -100,9 +99,14 @@ const DoctorDetail = () => {
                             >
                                 {day}
                             </div>
-                            <div className="doctorDetails-slots">
+                           <div className="doctorDetails-slots">
                                 {totalAvailableSlots} Slots (of {totalMaxSlots})
+                                
+                                {totalAvailableSlots === 0 && (
+                                    <div className="doctorDetails-slots-unavailable">Unavailable</div>
+                                )}
                             </div>
+
                         </div>
                     );
                 })}

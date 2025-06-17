@@ -18,7 +18,7 @@ const Dashboard = () => {
 
             <ImageCard image={image1} onClick={() => navigate("/dashboard/request")} text={" Add Doctor Request"} />
 
-            <ImageCard image={image2} onClick={() => navigate("/dashboard/patients")} text={"Registerd Patients"} />
+            <ImageCard image={image2} onClick={() => navigate("/dashboard/patients")} text={"Manage Patients"} />
 
             <ImageCard image={image3} onClick={() => navigate("/dashboard/request")} text={" Add Doctor Request"} />
         </div>

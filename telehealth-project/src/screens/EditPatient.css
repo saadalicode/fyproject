@@ -1,0 +1,37 @@
+.editPatient-container {
+    width: 80%;
+    margin: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+    justify-content: center; */
+}
+
+.editPatient-image-container {
+    display: flex;
+    justify-content: flex-start;  
+    margin-bottom: 10px;
+}
+
+.editPatient-button {
+    border-radius: 7px;
+    color: white;
+    background-color: rgba(255, 0, 0, 0.838);
+    border: 2px solid white;
+    width: 20%;
+    padding: 5px;
+    font-weight: bold;
+}
+
+.editPatient-button:hover {
+    /* color: black; */
+    background-color: rgba(255, 32, 32, 0.838);
+}
+
+@media (max-width: 992px) {
+    .editPatient-button {
+        border: none;
+        width: 40%;
+    }
+}

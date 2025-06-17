@@ -33,16 +33,16 @@ const RescheduleAppointment = () => {
     };
 
     const fetchWeeklySlots = async (doctorId, fromDate) => {
-    try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/reschedule/weekly-slots/${doctorId}`, {
-            params: { from_date: fromDate }
-        });
-        setWeeklySlots(response.data.reschedulableDays);
-        // console.log("Fetched slots:", response.data.reschedulableDays);
-    } catch (error) {
-        console.error("Weekly slot fetch failed:", error.response?.data || error.message);
-    }
-};
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/reschedule/weekly-slots/${doctorId}`, {
+                params: { from_date: fromDate }
+            });
+            setWeeklySlots(response.data.reschedulableDays);
+            // console.log("Fetched slots:", response.data.reschedulableDays);
+        } catch (error) {
+            console.error("Weekly slot fetch failed:", error.response?.data || error.message);
+        }
+    };
 
 
     const handleProceed = () => {

@@ -41,5 +41,11 @@ class Doctor extends Model
         return $this->hasMany(Appointment::class, 'doctor_id');
     }
 
+    public function blockedDates()
+    {
+        return $this->hasMany(DoctorBlockedDate::class);
+    }
+
+
 }
 

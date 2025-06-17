@@ -4,8 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Doctor;
+use App\Models\DoctorBlockedDate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\Payment;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
+use Illuminate\Support\Facades\Log;
+
 
 class AppointmentController extends Controller
 {
@@ -56,7 +62,14 @@ class AppointmentController extends Controller
             // Count how many appointments are booked on this date
             $bookedCount = $appointments->where('appointment_date', $dayDateStr)->count();
 
-            $availableSlots = max(0, $totalSlots - $bookedCount);
+            
+            if (DoctorBlockedDate::where('doctor_id', $doctorId)->where('date', $dayDateStr)->exists()) {
+                $availableSlots = 0;
+            }
+            else{
+                $availableSlots = max(0, $totalSlots - $bookedCount);
+            }
+
 
             // Update availability flag
             if ($availableSlots > 0) {
@@ -68,6 +81,7 @@ class AppointmentController extends Controller
                 'date' => $dayDateStr,
                 'availableSlots' => $availableSlots,
                 'totalSlots' => $totalSlots,
+                'blocked_dates' => $doctor->blockedDates->pluck('date')->toArray(),
                 'bookedSlots' => $bookedCount
             ];
         }
@@ -79,22 +93,81 @@ class AppointmentController extends Controller
         return response()->json($results);
     }
 
+     public function __construct()
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+    }
+
+    /* ---------------- create intent ---------------- */
+    public function createIntent(Request $req)
+    {
+        // Log::info($req->all());
+
+        $req->validate([
+            'amount'           => 'required|integer|min:100', // paisa
+            'doctor_id'        => 'required|exists:doctors,id',
+            'patient_id'       => 'required|exists:patients,id',
+            'appointment_date' => 'required|date',
+        ]);
+
+        // 1.  create payment‑intent
+        try{
+            $intent = PaymentIntent::create([
+            'amount'   => $req->amount,
+            'currency' => 'pkr',
+            'metadata' => [
+                'doctor_id'        => $req->doctor_id,
+                'patient_id'       => $req->patient_id,
+                'appointment_date' => $req->appointment_date,
+            ],
+        ]);
+        } catch (\Exception $e) {
+                // Log::error('Stripe Payment Intent Error: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
+        // 2.  store a PENDING record
+        Payment::create([
+            'stripe_payment_id' => $intent->id,
+            'status'            => 'processing',
+            'amount'            => $req->amount,
+            'currency'          => 'pkr',
+        ]);
+
+        return response()->json(['clientSecret' => $intent->client_secret]);
+    }
+
+
 
     // Store an appointment
-    public function store(Request $request)
+    public function confirmIntent(Request $request)
     {
-        $request->validate([
-            'doctor_id' => 'required|exists:doctors,id',
-            'patient_id' => 'required|exists:patients,id',
-            'patient_name' => 'nullable|string|max:255',
-            'patient_father_name' => 'nullable|string|max:255',
-            'patient_age' => 'nullable|integer',
-            'appointment_date' => 'required|date',
-            'appointment_status' => 'required|in:pending,reschedule,entertained,cancelled',
-            'disease' => 'nullable|string',
-            'doctor_remarks' => 'nullable|string',
-            'rating' => 'nullable|integer|min:0|max:5',
-        ]);
+        $request->validate(['payment_intent_id' => 'required|string']);
+
+        $intent = PaymentIntent::retrieve($request->payment_intent_id);
+
+        // Guard
+        if ($intent->status !== 'succeeded') {
+            return response()->json(['message' => 'Payment not completed'], 400);
+        }
+
+        /* 1️⃣  mark payment row */
+        $payment = Payment::where('stripe_payment_id', $intent->id)->first();
+        $payment->update(['status' => 'succeeded']);
+
+
+        // $request->validate([
+        //     'doctor_id' => 'required|exists:doctors,id',
+        //     'patient_id' => 'required|exists:patients,id',
+        //     'patient_name' => 'nullable|string|max:255',
+        //     'patient_father_name' => 'nullable|string|max:255',
+        //     'patient_age' => 'nullable|integer',
+        //     'appointment_date' => 'required|date',
+        //     'appointment_status' => 'required|in:pending,reschedule,entertained,cancelled',
+        //     'disease' => 'nullable|string',
+        //     'doctor_remarks' => 'nullable|string',
+        //     'rating' => 'nullable|integer|min:0|max:5',
+        // ]);
 
         // try {
         //     // Get the doctor's available working days and slots
@@ -136,23 +209,26 @@ class AppointmentController extends Controller
 
             // Create the appointment
             $appointment = Appointment::create([
-                'doctor_id' => $request->doctor_id,
-                'patient_id' => $request->patient_id,
-                'appointment_date' => $request->appointment_date,  // Set the appointment date to the selected date
+                'doctor_id' => $intent->metadata->doctor_id,
+                'patient_id' => $intent->metadata->patient_id,
+                'appointment_date' => $intent->metadata->appointment_date,  // Set the appointment date to the selected date
                 'appointment_status' => 'pending', // Default status
-                'patient_name' => $request->patient_name,
-                'patient_father_name' => $request->patient_father_name,
-                'patient_age' => $request->patient_age,
-                'disease' => $request->disease,
-                'doctor_remarks' => $request->doctor_remarks,
-                'rating' => $request->rating,
+                // 'patient_name' => $request->patient_name,
+                // 'patient_father_name' => $request->patient_father_name,
+                // 'patient_age' => $request->patient_age,
+                // 'disease' => $request->disease,
+                // 'doctor_remarks' => $request->doctor_remarks,
+                // 'rating' => $request->rating,
             ]);
+
+             // link payment ↔ appointment
+            $payment->appointment_id = $appointment->id;
+            $payment->save();
             
             // Save the updated slots and availability for the doctor
             // $doctor->slots = $slots;
             // $doctor->available = collect($slots)->contains(fn($slot) => $slot > 0); // true if any slot > 0
             // $doctor->save();
-
             
             return response()->json([
                 'message' => 'Appointment created successfully',

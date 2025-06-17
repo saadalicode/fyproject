@@ -68,6 +68,10 @@
     font-weight: 600; /* Make the slot number bold */
     color: #4A4A4A; /* Add a little darker color for the slot text */
   }
+
+  .doctorDetails-slots-unavailable {
+    color: red;
+  }
   
   .disabledDay {
     pointer-events: none;

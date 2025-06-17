@@ -17,8 +17,15 @@ const EditDoctor = () => {
   const fetchDoctorData = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/api/doctors/edit/${id}`);
+      const doctorData = response.data;
+      // Convert arrays to comma-separated strings for display
+      if (Array.isArray(doctorData.working_days)) {
+        doctorData.working_days = doctorData.working_days.join(',');
+      }
+      if (Array.isArray(doctorData.slots)) {
+        doctorData.slots = doctorData.slots.join(',');
+      }
       setDoctor(response.data);
-      console.log(response.data.image);
       setLoading(false);
     } catch (error) {
       setErrorMsg("Failed to fetch doctor data.");
@@ -40,28 +47,55 @@ const EditDoctor = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const formData = new FormData();
-      for (const key in doctor) {
-        formData.append(key, doctor[key]);
-      }
-      if (image) {
-        formData.append("image", image);
-      }
+  try {
+    const formData = new FormData();
 
-      await axios.post(`http://127.0.0.1:8000/api/doctors/update/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    // Compare fields and add only changed ones
+    if (doctor.name) formData.append("name", doctor.name);
+    if (doctor.phone) formData.append("phone", doctor.phone);
+    if (doctor.email) formData.append("email", doctor.email);
+    if (doctor.password) formData.append("password", doctor.password);
+    if (doctor.specialization) formData.append("specialization", doctor.specialization);
+    if (doctor.experience !== undefined && doctor.experience !== null)
+      formData.append("experience", doctor.experience);
+    if (doctor.opening_hours) formData.append("opening_hours", doctor.opening_hours);
+    if (doctor.closing_hours) formData.append("closing_hours", doctor.closing_hours);
+    if (doctor.price !== undefined && doctor.price !== null) formData.append("price", doctor.price);
+    if (doctor.address) formData.append("address", doctor.address);
+    if (doctor.location) formData.append("location", doctor.location);
 
-      alert("Doctor updated successfully.");
-      navigate("/");
-    } catch (error) {
-      console.error("Update error:", error.response?.data || error.message);
-      setErrorMsg("Failed to update doctor. Please check your input and try again.");
+    // Only add working_days if not empty or null
+    if (doctor.working_days && doctor.working_days.trim() !== "") {
+      const workingDaysArray = doctor.working_days.split(",").map(day => day.trim());
+      formData.append("working_days", JSON.stringify(workingDaysArray));
     }
-  };
+
+    // Only add slots if not empty or null
+    if (doctor.slots && doctor.slots.trim() !== "") {
+      const slotsArray = doctor.slots.split(",").map(slot => slot.trim());
+      formData.append("slots", JSON.stringify(slotsArray));
+    }
+
+    // Add image if user selected a new one
+    if (image) {
+      formData.append("image", image);
+    }
+
+    await axios.post(`http://127.0.0.1:8000/api/doctors/update/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    alert("Doctor updated successfully.");
+    navigate("/");
+  } catch (error) {
+    console.error("Update error:", error.response?.data || error.message);
+    setErrorMsg("Failed to update doctor. Please check your input and try again.");
+  }
+};
+
+
 
   if (loading) return <p>Loading doctor data...</p>;
 
@@ -198,7 +232,7 @@ const EditDoctor = () => {
         )}
       </div>
 
-      <ButtonComponent text="Submit" onClick={handleSubmit} className="editDoctor-button" />
+      <ButtonComponent text="Update" onClick={handleSubmit} className="editDoctor-button" />
     </div>
   );
 };

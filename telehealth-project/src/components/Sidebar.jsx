@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaInfoCircle, FaUserMd, FaBriefcaseMedical, FaTachometerAlt, FaUserInjured, FaCalendarAlt } from "react-icons/fa";
+import { FaHome, FaInfoCircle, FaUserMd, FaBriefcaseMedical, FaTachometerAlt, FaUserInjured, FaCalendarAlt, FaRegCalendarPlus } from "react-icons/fa";
 
 const Sidebar = () => {
   const role = localStorage.getItem("role");
@@ -27,7 +27,10 @@ const Sidebar = () => {
 
         {/* Visible to doctors only */}
         {role === "doctor" && (
-          <li><Link to="/patients"><FaCalendarAlt /> Patients</Link></li>
+          <>  
+            <li><Link to="/patients"><FaCalendarAlt /> Patients</Link></li>
+            <li><Link to="/schedule"><FaRegCalendarPlus /> Set Availability</Link></li>
+          </>
         )}
 
         {/* Visible to admins only */}

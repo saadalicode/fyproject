@@ -9,7 +9,6 @@ const BookAppointment = () => {
     const [doctor, setDoctor] = useState(null);
     const [patient, setPatient] = useState(null);
     const navigate = useNavigate();
-    console.log(date);
 
     useEffect(() => {
         fetchDoctorData();
@@ -22,15 +21,6 @@ const BookAppointment = () => {
             "http://127.0.0.1:8000/api/doctors/"+id,
           );
           setDoctor(response.data);
-          
-        //   // You can directly use the working_days and slots as they are already arrays
-        //   const { working_days, slots } = response.data;
-
-        //   setDoctor((prevDoctor) => ({
-        //     ...prevDoctor,
-        //     working_days,   // no need to parse
-        //     slots,           // no need to parse
-        //   }));
           
         } catch (error) {
           console.error("failed:", error.response?.data || error.message);
@@ -48,7 +38,14 @@ const BookAppointment = () => {
 
     
     const handlePayment = () => {
-        alert("Payment Clicked. Payment logic will be handled later.");
+        navigate("/pay", {
+            state: {
+            doctor,
+            patient,
+            appointmentDate: date,       
+            amount: doctor.price 
+            }
+        });    
     };
 
 
@@ -61,7 +58,7 @@ const BookAppointment = () => {
             <p><strong>Appointment Scheduler Name:</strong> {patient.name}</p>
             <p><strong>Doctor Name:</strong> {doctor.name}</p>
             <p><strong>Doctor Specialization:</strong> {doctor.specialization}</p>
-            <p><strong>Experience:</strong> {doctor.experience} years</p>
+            <p><strong>Doctor Experience:</strong> {doctor.experience} years</p>
             <p><strong>Fee:</strong> {doctor.price}</p>
             <p><strong>Opening Hours:</strong> {doctor.opening_hours}</p>
             <p><strong>Closing Hours:</strong> {doctor.closing_hours}</p>

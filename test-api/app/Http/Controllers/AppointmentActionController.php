@@ -6,6 +6,8 @@ use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\User;
 use App\Models\AppointmentAction;
+use App\Models\DoctorBlockedDate;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -56,10 +58,17 @@ class AppointmentActionController extends Controller
                     $dayDateStr = $currentDate->toDateString();
                     $bookedCount = $appointments->where('appointment_date', $dayDateStr)->count();
 
+                    if (DoctorBlockedDate::where('doctor_id', $doctorId)->where('date', $dayDateStr)->exists()) {
+                        $availableSlots = 0;
+                    }
+                    else{
+                        $availableSlots = max(0, $totalSlots - $bookedCount);
+                    }
+
                     $weeklySlots[] = [
                         'day' => $dayName,
                         'date' => $dayDateStr,
-                        'availableSlots' => max(0, $totalSlots - $bookedCount),
+                        'availableSlots' => $availableSlots,
                         'bookedSlots' => $bookedCount,
                         'totalSlots' => $totalSlots,
                     ];
@@ -178,13 +187,16 @@ class AppointmentActionController extends Controller
             'performed_by_role' => $performedByRole,
         ]);
 
+        $patient = Patient::findorfail($appointment->patient_id);
+        $patient_name = $patient->name;
+
         // Create new rescheduled appointment
         $newAppointment = Appointment::create([
             'patient_id' => $appointment->patient_id,
             'doctor_id' => $appointment->doctor_id,
             'appointment_date' => $nextAppointmentDate,
             'appointment_status' => 'pending',
-            'patient_name' => $user->name,
+            'patient_name' => $patient_name,
         ]);
 
         // Update current appointment

@@ -89,6 +89,18 @@ class PatientsController extends Controller
         return response()->json($patient);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+         $patient = Patient::findorfail($id);
+        if(!$patient){
+            return response()->json(['error', "Patient Not Found"], 404);
+        }
+        return response()->json($patient);
+    }
+
     public function update(Request $request, $id)
     {
         $patient = Patient::find($id);
@@ -96,26 +108,38 @@ class PatientsController extends Controller
             return response()->json(['message' => 'Patient not found'], 404);
         }
 
-        $data = $request->only(['name', 'email', 'password']);
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|string|max:255',
+            'phone' => 'sometimes|string|max:11',
+            'email' => 'sometimes|string|email|unique:patients,email,' . $patient->id,
+            'password' => 'sometimes|string|min:8',
+            'image' => 'sometimes|file|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'address' => 'sometimes|string',
+        ]);
 
-        if ($request->has('password')) {
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+
+         $data = $request->except('password', 'image');
+
+        // Handle password update (if present)
+        if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 
-        // Handle Image Update
         if ($request->hasFile('image')) {
-            $request->validate(['image' => 'image|mimes:jpeg,png,jpg,gif|max:2048']);
-
             // Delete old image if exists
-            if ($patient->image && Storage::exists($patient->image)) {
-                Storage::delete($patient->image);
+            if ($patient->image) {
+                $oldImagePath = str_replace(asset('storage') . '/', '', $patient->image);
+                Storage::disk('public')->delete($oldImagePath);
             }
 
-            // Store new image
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('uploads/patients', $imageName, 'public');
-            $data['image'] = $imagePath;
+            $imagePath = $image->storeAs('uploads/pateints', $imageName, 'public');
+            $data['image'] = asset('storage/' . $imagePath);
         }
 
         $patient->update($data);
@@ -135,7 +159,10 @@ class PatientsController extends Controller
             Storage::delete($patient->image);
         }
 
+        // Delete the related user by email (assuming email is unique)
+        User::where('email', $patient->email)->delete();
+
         $patient->delete();
-        return response()->json(['message' => 'Patient deleted successfully']);
+        return response()->json(['message' => 'Patient deleted successfully'], 200);
     }
 }

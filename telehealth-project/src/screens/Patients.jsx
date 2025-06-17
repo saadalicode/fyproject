@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import PatientListRow from "../components/PatientListRow";
+import PatientAppointmentListRow from "../components/PatientAppointmentListRow";
 import jsonData from "../data/appointments.json";
 import "./Patients.css";
 
@@ -38,9 +38,9 @@ const Patients = () => {
                 </thead>
                 <tbody>
                 {patientsData.map((patient) => (
-                    <PatientListRow 
+                    <PatientAppointmentListRow 
                         key={patient.id} 
-                        patient={patient} 
+                        appointment={patient} 
                         classname="patientsList-row"
                         />
                     ))}
